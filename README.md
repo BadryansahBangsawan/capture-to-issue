@@ -47,9 +47,10 @@ Enable **Open at Login** from Settings if you want it after reboot.
 
 ## Usage
 
-- Set **Default repo (owner/repo)** in Settings.
+- Set **Default repo (owner/repo)** in Settings before the first submit — otherwise `gh issue create` has no target.
 - **Capture region**, drag, annotate, then submit. Esc dismisses the overlay.
 - Without Screen Recording, capture stays disabled.
+- If Submit fails with an auth error, run `gh auth login` once in Terminal, then retry from the panel.
 
 ## Permissions
 
