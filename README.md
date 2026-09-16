@@ -1,40 +1,56 @@
+<div align="center">
+
 # Capture to Issue
 
-Capture a screen region, annotate it, and file a GitHub issue with `gh`.
+**Screen-capture a region and file a GitHub issue from the menu bar.**  
+macOS menu extra — lives in the menu bar, no Dock icon.
 
-Menu extra for macOS 14+. It lives in the menu bar and does not show a Dock icon.
+<br/>
 
-## Features
+[![Latest Release](https://img.shields.io/github/v/release/BadryansahBangsawan/capture-to-issue?style=flat-square&color=76B900&label=latest)](https://github.com/BadryansahBangsawan/capture-to-issue/releases/latest)
+[![macOS](https://img.shields.io/badge/macOS-14%2B-black?style=flat-square&logo=apple)](https://github.com/BadryansahBangsawan/capture-to-issue/releases/latest)
+[![Swift](https://img.shields.io/badge/Swift-5.9%2B-F05138?style=flat-square&logo=swift&logoColor=white)](https://swift.org)
 
-- Region overlay; Esc cancels.
-- OCR + annotation before submit.
-- Creates an issue with `gh issue create` in the default `owner/repo`.
-- Recent captures in the panel.
-- Screen Recording denied shows a red label and a Settings CTA — no crash.
+<br/>
 
-## Requirements
+</div>
 
-- macOS 14 Sonoma or later
-- Swift 5.9 or later
-- Screen Recording permission
-- `gh` authenticated if you want Submit to open a real issue
+---
 
-## Install
+## Download
 
-Homebrew (macOS 14+):
+| Platform | File |
+|---|---|
+| **macOS** (Apple Silicon & Intel, macOS 14+) | `CaptureToIssue-*-macos.zip` |
+
+[Go to Releases](https://github.com/BadryansahBangsawan/capture-to-issue/releases/latest)
+
+---
+
+## Installation
+
+### Homebrew (recommended)
 
 ```bash
 brew tap BadryansahBangsawan/mac-menu-apps
 brew install --cask capture-to-issue
 ```
 
-Opens as a menu extra (no Dock icon). The cask is ad-hoc signed. If Gatekeeper blocks it:
+A **Capture to Issue** icon appears in the menu bar. If Gatekeeper blocks it on first launch:
 
 ```bash
-xattr -cr /Applications/CaptureToIssue.app
+xattr -cr /Applications/CaptureToIssue.app && open /Applications/CaptureToIssue.app
 ```
 
-Build from source:
+Or: right-click the app, Open, then Open again. Still blocked? **System Settings → Privacy & Security → Open Anyway**.
+
+### GitHub Releases
+
+1. Download `CaptureToIssue-*-macos.zip` from [Releases](https://github.com/BadryansahBangsawan/capture-to-issue/releases/latest)
+2. Unzip and drag **CaptureToIssue** into Applications
+3. On first launch, run the xattr command above if Gatekeeper blocks it
+
+### Build from source
 
 ```bash
 git clone https://github.com/BadryansahBangsawan/capture-to-issue.git
@@ -43,36 +59,27 @@ bash package-app.sh
 open dist/CaptureToIssue.app
 ```
 
-Enable **Open at Login** from Settings if you want it after reboot.
+Requires Xcode Command Line Tools and Swift 5.9+.
 
-## Usage
+## Keyboard Shortcuts
 
-- Set **Default repo (owner/repo)** in Settings before the first submit — otherwise `gh issue create` has no target.
-- **Capture region**, drag, annotate, then submit. Esc dismisses the overlay.
-- Without Screen Recording, capture stays disabled.
-- If Submit fails with an auth error, run `gh auth login` once in Terminal, then retry from the panel.
+| Shortcut | Action |
+|---|---|
+| `Control+Shift+C` | Capture region |
 
-## Permissions
+---
 
-- **Screen Recording** — `NSScreenCaptureUsageDescription` is set. Deny is a banner, not a crash.
+## Notes
 
-Denied permissions must not crash the app. You should see a banner and a button to open System Settings.
+– Requires Screen Recording permission (prompted on first capture).
+– Requires gh authenticated to submit real issues (gh auth login).
+– OCR is performed locally via Vision framework — no data leaves the machine.
+– No Dock icon; lives entirely in the menu bar.
 
-## Privacy
+---
 
-Screenshots stay on disk until you submit. Submit sends them to GitHub via `gh` for the repo you configured. No other upload.
+<div align="center">
 
-Bundle ID: `engineer.badry.capturetoissue`.
+Made with ♥ for developers who prefer staying in the flow.
 
-## Development
-
-```bash
-swift build
-swift build -c release --product CaptureToIssue
-```
-
-Layout: `Sources/` (SwiftPM executable), `Info.plist`, `Assets/AppIcon.icns`, `package-app.sh`.
-
-## License
-
-[MIT](LICENSE)
+</div>
