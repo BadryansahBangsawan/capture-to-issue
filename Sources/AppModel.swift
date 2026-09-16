@@ -26,17 +26,18 @@ final class AppModel: ObservableObject {
     }
 
     func refreshPermission() async {
-        switch await ScreenPermission.check() {
-        case .success:
-            hasScreenAccess = true
-        case .failure(let error):
-            hasScreenAccess = false
-            bannerError = error.localizedDescription
+        hasScreenAccess = ScreenPermission.isTrusted()
+        if hasScreenAccess {
+            bannerError = nil
         }
     }
 
     func openScreenRecordingSettings() {
         ScreenPermission.openSystemSettings()
+    }
+
+    func relaunch() {
+        ScreenPermission.relaunch()
     }
 
     func recordTitle(_ title: String) {

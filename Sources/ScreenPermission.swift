@@ -1,20 +1,25 @@
 import AppKit
+import CoreGraphics
 import Foundation
-import ScreenCaptureKit
 
 enum ScreenPermission {
     static let prefsURL = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture")!
 
-    static func check() async -> Result<Void, Error> {
-        do {
-            _ = try await SCShareableContent.excludingDesktopWindows(false, onScreenWindowsOnly: true)
-            return .success(())
-        } catch {
-            return .failure(error)
-        }
+    static func isTrusted() -> Bool {
+        CGPreflightScreenCaptureAccess()
     }
 
     static func openSystemSettings() {
         NSWorkspace.shared.open(prefsURL)
+    }
+
+    static func relaunch() {
+        let path = Bundle.main.bundlePath
+        let escaped = "'" + path.replacingOccurrences(of: "'", with: "'\\''") + "'"
+        let proc = Process()
+        proc.executableURL = URL(fileURLWithPath: "/bin/zsh")
+        proc.arguments = ["-c", "sleep 0.4; /usr/bin/open \(escaped)"]
+        try? proc.run()
+        NSApp.terminate(nil)
     }
 }

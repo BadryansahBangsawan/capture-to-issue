@@ -5,12 +5,13 @@ struct RootView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: FunTheme.sectionSpacing) {
             if let error = model.bannerError {
                 Label(error, systemImage: "exclamationmark.triangle.fill")
                     .foregroundStyle(.red)
                     .font(.callout)
                     .textSelection(.enabled)
+                    .fixedSize(horizontal: false, vertical: true)
             }
             if let warning = model.bannerWarning {
                 Label(warning, systemImage: "info.circle")
@@ -23,6 +24,7 @@ struct RootView: View {
                     .foregroundStyle(.red)
                     .font(.callout)
                     .textSelection(.enabled)
+                    .fixedSize(horizontal: false, vertical: true)
             }
             if let status = model.lastStatus {
                 Text(status)
@@ -34,19 +36,42 @@ struct RootView: View {
                 Label("Screen Recording is required to capture a region.", systemImage: "exclamationmark.triangle.fill")
                     .foregroundStyle(.red)
                     .font(.callout)
-                Button("Open Screen Recording Settings") {
-                    model.openScreenRecordingSettings()
+                    .fixedSize(horizontal: false, vertical: true)
+                Text("If the switch is already on, turn it off and on, then Relaunch.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                HStack {
+                    Button("Open Screen Recording Settings") {
+                        model.openScreenRecordingSettings()
+                    }
+                    Button("Relaunch") {
+                        model.relaunch()
+                    }
                 }
             }
 
             if model.history.isEmpty {
-                Text("Capture a region to file an issue.")
-                    .foregroundStyle(.secondary)
-                Button("Capture region") {
-                    model.beginCapture()
+                if !model.hasScreenAccess || model.isCapturing {
+                    Button("Capture region") {
+                        model.beginCapture()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .disabled(model.isCapturing || !model.hasScreenAccess)
                 }
-                .buttonStyle(.borderedProminent)
-                .disabled(model.isCapturing || !model.hasScreenAccess)
+
+                ExtraEmptyState(
+                    title: "No captures",
+                    detail: "Capture a region to file a GitHub issue.",
+                    actionTitle: model.hasScreenAccess ? "Capture region" : "Open Screen Recording Settings",
+                    action: {
+                        if model.hasScreenAccess {
+                            model.beginCapture()
+                        } else {
+                            model.openScreenRecordingSettings()
+                        }
+                    }
+                )
             } else {
                 Button("Capture region") {
                     model.beginCapture()
@@ -54,24 +79,23 @@ struct RootView: View {
                 .buttonStyle(.borderedProminent)
                 .disabled(model.isCapturing || !model.hasScreenAccess)
 
-                Text("Recent")
-                    .font(.headline)
-                ForEach(model.history) { item in
-                    Text(item.title)
-                        .lineLimit(1)
-                        .foregroundStyle(.secondary)
+                VStack(alignment: .leading, spacing: FunTheme.innerSpacing) {
+                    Text("Recent")
+                        .font(.headline)
+                    ForEach(model.history) { item in
+                        Text(item.title)
+                            .lineLimit(1)
+                            .foregroundStyle(.secondary)
+                            .extraRowSurface()
+                    }
                 }
             }
 
-            Divider()
-            SettingsLink {
-                Text("Settings…")
-            }
+            ExtraSettingsFooter()
         }
-        .funPanel()
-        .background(.regularMaterial)
         .animation(reduceMotion ? nil : FunTheme.spring, value: model.history.count)
         .animation(reduceMotion ? nil : FunTheme.spring, value: model.hasScreenAccess)
+        .funPanel()
         .task {
             await model.refreshPermission()
         }
