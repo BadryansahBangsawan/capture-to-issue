@@ -59,7 +59,7 @@ bash package-app.sh
 open dist/CaptureToIssue.app
 ```
 
-Requires Xcode Command Line Tools and Swift 5.9+.
+Requires Xcode Command Line Tools (`xcode-select --install`) and Swift 5.9+.
 
 ## Keyboard Shortcuts
 
