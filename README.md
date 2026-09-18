@@ -71,7 +71,7 @@ Requires Xcode Command Line Tools (`xcode-select --install`) and Swift 5.9+.
 
 ## Notes
 
-– Requires Screen Recording permission (prompted on first capture).
+– Requires Screen Recording permission (prompted on first capture). If the picker never appears or captures stay blank, enable **CaptureToIssue** under **System Settings → Privacy & Security → Screen Recording**, then quit and reopen the app from the menu bar.
 – Requires gh authenticated to submit real issues (gh auth login).
 – OCR is performed locally via Vision framework — no data leaves the machine.
 – Captured images are attached directly to the GitHub issue; keep regions under 10 MB to stay within the GitHub API attachment limit.
